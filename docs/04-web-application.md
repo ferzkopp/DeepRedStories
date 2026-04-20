@@ -4,11 +4,56 @@ The web app is a fully static site — HTML, CSS, JavaScript, and pre-generated 
 
 ## Serving Locally
 
+For quick testing against the `web/` folder directly:
+
 ```bash
 python -m http.server 8000 --directory web
 ```
 
 Then open `http://localhost:8000`.
+
+### Deploy and Serve Script
+
+The `scripts/deploy_and_serve.ps1` script builds a self-contained `site/` folder and starts a local server in one step:
+
+```powershell
+.\scripts\deploy_and_serve.ps1
+```
+
+It cleans any previous `site/` build, copies the `web/` assets, then copies `pipeline/output/` data (index + game folders) into `site/data/`, and launches `python -m http.server 8000` from the `site/` directory.
+
+## Serving Remotely
+
+To deploy to a remote web server, run the full pipeline and then copy the built site:
+
+1. **Run the pipeline** (if not already done):
+
+   ```bash
+   python pipeline/prepare_data.py --max-games 500
+   python pipeline/generate_audio.py --max-games 500 --resume
+   ```
+
+2. **Build the site:**
+
+   ```powershell
+   .\scripts\deploy_and_serve.ps1
+   ```
+
+   Stop the local server (`Ctrl+C`) once the build completes — only the `site/` folder is needed.
+
+3. **Copy to the remote server:**
+
+   ```bash
+   scp -r site/* user@host:/var/www/deepred/
+   ```
+
+   Or use `rsync` for incremental updates:
+
+   ```bash
+   rsync -avz --delete site/ user@host:/var/www/deepred/
+   ```
+
+The site is fully static — any HTTP server (Nginx, Apache, Caddy, S3, GitHub Pages, etc.) can serve it with no additional configuration.
 
 ## How It Works
 
@@ -27,27 +72,32 @@ Then open `http://localhost:8000`.
 | Control | Function |
 |---------|----------|
 | **▶ / ⏸** | Play or pause playback (pauses both audio and move advancement) |
+| **⏩ Fast Forward** | Skip to the next audio segment |
 | **⟳ New Game** | Stop current game and load a new random game |
+| **Auto-Continue** | Checkbox — automatically play the next game when the current one ends |
 | **Progress bar** | Visual indicator of game progress |
-| **Move counter** | Shows current move / total moves |
+| **Game counter** | Shows current game position in the shuffled playlist (e.g. Game: 3/12) |
+| **Move counter** | Shows current move / total moves (e.g. Move: 41/81) |
 
 ## UI Layout
 
 ```
-┌──────────────────────────────────────────────┐
-│  ♔ White Name    vs    ♚ Black Name   │ Info │  ← Header bar
-├─────────────────────┬────────────────────────┤
-│                     │  Moves                 │
-│    ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ │  1. e4  c5             │
-│    ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟ │  2. Nf3 Nc6            │
-│                     │  3. d4  cxd4           │
-│    ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙ │  4. Nxd4 ...           │  ← Main area
-│    ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ │                        │
-├─────────────────────┴────────────────────────┤
-│  "The encounter between Viktor Kortschnoj..." │  ← Narrative subtitle
-├──────────────────────────────────────────────┤
-│  ▶  ⟳ New Game  ████░░░░░░░░░░  3/55         │  ← Controls
-└──────────────────────────────────────────────┘
+┌───────────────────────┬──────────────────────────────┐
+│  DEEP RED             │  ♔ White Name  vs           │
+│  Dispatches from the  │  ♚ Black Name               │  ← Header bar
+│  Deep Red Continuum   │  Event │ Year │ ECO │ Result │
+├───────────────────────┴───────────┬──────────────────┤
+│                                   │  MOVES           │
+│    ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜          │  1. e4    c5     │
+│    ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟          │  2. Nf3   Nc6    │
+│                                   │  3. d4    cxd4   │  ← Main area
+│    ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙          │  4. Nxd4  ...    │
+│    ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖          │                  │
+├───────────────────────────────────┴──────────────────┤
+│  ▶  ⏭  ⟳ New Game  ████████░░░░░░░░  Move: 41/81    │  ← Controls
+├──────────────────────────────────────────────────────┤
+│  // "The position became a battlefield of rooks..."  │  ← Narrative subtitle
+└──────────────────────────────────────────────────────┘
 ```
 
 - **Dark theme** (#0f0f1a background) for atmosphere
@@ -58,6 +108,7 @@ Then open `http://localhost:8000`.
 
 | Library | Version | Purpose |
 |---------|---------|---------|
+| [jQuery](https://jquery.com/) | 3.7.1 | DOM manipulation (required by chessboard.js) |
 | [chess.js](https://github.com/jhlywa/chess.js) | 0.10.3 | Game logic, move validation, FEN generation |
 | [chessboard.js](https://chessboardjs.com/) | 1.0.0 | Board rendering with animated piece movement |
 
