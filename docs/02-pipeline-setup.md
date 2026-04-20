@@ -42,12 +42,23 @@ ffmpeg is required for WAV → MP3 conversion.
 winget install --id Gyan.FFmpeg -e --source winget
 ```
 
+**Linux (apt):**
+```bash
+sudo apt update && sudo apt install ffmpeg
+```
+
+**macOS (Homebrew):**
+```bash
+brew install ffmpeg
+```
+
 Restart terminal and verify with: `ffmpeg -version`
 
 ## Install Python Dependencies
 
 Create a virtual environment with Python 3.11:
 
+```bash
 cd DeepRedStories
 py -3.11 -m venv .venv
 .venv\Scripts\activate       # Windows

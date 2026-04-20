@@ -46,10 +46,12 @@ A static web application that replays historical chess games with synchronized A
 
 ## Source Data
 
+The two input files must be downloaded separately — see [Pipeline Setup](02-pipeline-setup.md#download-input-data) for download instructions.
+
 | File | Description | Size |
 |------|-------------|------|
-| `pipeline/input/chess_games.jsonl` | Historical chess games with metadata and moves in algebraic notation | ~300K lines |
-| `pipeline/input/augmented_chess_games.jsonl` | AI-generated narrative commentary for each game | ~200K lines |
+| `pipeline/input/chess_games.jsonl.gz` | Historical chess games with metadata and moves in algebraic notation | ~300K lines |
+| `pipeline/input/augmented_chess_games.jsonl.gz` | AI-generated narrative commentary for each game | ~200K lines |
 
 Both files share a `key` field (format: `"Player1-Player2-Date-Event-Round"`).
 
@@ -62,8 +64,8 @@ DeepRedStories/
 ├── docs/                          # This documentation
 ├── pipeline/
 │   ├── input/                     # Source data (read-only)
-│   │   ├── chess_games.jsonl
-│   │   └── augmented_chess_games.jsonl
+│   │   ├── chess_games.jsonl.gz
+│   │   └── augmented_chess_games.jsonl.gz
 │   ├── prepare_data.py            # Phase 1: data joining, sampling & parsing
 │   ├── generate_audio.py          # Phase 2: TTS audio generation
 │   ├── chess_notation_converter.py # Notation-to-speech preprocessing
