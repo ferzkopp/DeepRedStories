@@ -384,6 +384,23 @@
     state.currentPly++;
   }
 
+  /** Create an Audio element with explicit MIME type via <source>. */
+  function createAudio(url) {
+    const audio = document.createElement('audio');
+    audio.preload = 'auto';
+    const source = document.createElement('source');
+    source.src = url;
+    const ext = url.split('.').pop().toLowerCase();
+    if (ext === 'mp3') source.type = 'audio/mpeg';
+    else if (ext === 'wav') source.type = 'audio/wav';
+    else if (ext === 'ogg') source.type = 'audio/ogg';
+    audio.appendChild(source);
+    audio.addEventListener('error', function() {
+      console.error('Audio error:', audio.error?.code, audio.error?.message, 'src:', url);
+    });
+    return audio;
+  }
+
   function playSegment(segIdx) {
     if (segIdx >= state.control.segments.length) {
       // All segments done — play remaining moves quickly if any
@@ -417,7 +434,7 @@
     const gameId = state.game.game_id;
     const audioUrl = `${DATA_BASE}/games/${gameId}/${seg.audio_file}`;
 
-    state.audioElement = new Audio(audioUrl);
+    state.audioElement = createAudio(audioUrl);
     const plies = pliesInSegment(seg);
     const isIntro = seg.start_move === 0 && seg.end_move === 0;
 
