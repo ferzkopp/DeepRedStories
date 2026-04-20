@@ -1,0 +1,25 @@
+# Virtual environment
+.venv/
+
+# Site folder (deployed output)
+site/
+
+# Game data
+web/data/
+
+# Pipeline input data (large files, download separately)
+pipeline/input/*.jsonl
+pipeline/input/*.jsonl.gz
+
+# Pipeline generated output
+pipeline/output/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

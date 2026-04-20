@@ -1,0 +1,6 @@
+# DEEP RED Stories Pipeline Dependencies
+TTS>=0.22.0
+pydub>=0.25.1
+tqdm>=4.65.0
+torch>=2.0.0
+soundfile>=0.12
