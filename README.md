@@ -4,7 +4,7 @@
   <img src="docs/Screenshot.jpg" alt="DEEP RED Stories" width="600">
 </p>
 
-A static web application that replays historical chess games with synchronized AI-generated audio commentary. A deep-voiced, Russian-accented narrator guides the viewer through each game move by move. 
+A static web application that replays historical chess games with synchronized AI-generated audio commentary. A deep-voiced, Russian-accented narrator guides the viewer through each game move by move. Inspired by https://www.deepredfilm.com/
 
 Are you ready to learn from DEEP RED, the AI governing the perfect Martian utopia of New Moscow, built from an old Soviet chess computer, and with the brilliant insights of an uncontrolled machine.
 
