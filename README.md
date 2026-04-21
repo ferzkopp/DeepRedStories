@@ -8,6 +8,10 @@ A static web application that replays historical chess games with synchronized A
 
 Are you ready to learn from DEEP RED, the AI governing the perfect Martian utopia of New Moscow, built from an old Soviet chess computer, and with the brilliant insights of an uncontrolled machine.
 
+<p align="center">
+  <a href="https://ferzkopp.net/DeepRedStories/">♚ Visit DEEP RED Stories</a>
+</p>
+
 ## Quick Start
 
 ```bash
