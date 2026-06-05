@@ -13,6 +13,7 @@ import glob
 import json
 import os
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -458,6 +459,9 @@ def main():
                         help="Max games to process (default: 100)")
     parser.add_argument("--resume", action="store_true",
                         help="Resume from last checkpoint")
+    parser.add_argument("--overwrite", action="store_true",
+                        help="Wipe existing audio state (games/, progress.json, "
+                             "index.json) and regenerate everything from scratch")
     parser.add_argument("--index-only", action="store_true",
                         help="Only regenerate index.json from existing game dirs")
     parser.add_argument("--gpu", action="store_true", default=True,
@@ -480,6 +484,23 @@ def main():
     if args.index_only:
         write_index(str(games_dir), str(index_path))
         return
+
+    if args.overwrite and args.resume:
+        print("Error: --overwrite and --resume are mutually exclusive.")
+        sys.exit(1)
+
+    # Overwrite mode: wipe existing audio state before regenerating
+    if args.overwrite:
+        removed = 0
+        for path in [progress_path, index_path]:
+            if path.exists():
+                path.unlink()
+                removed += 1
+        if games_dir.exists():
+            removed += sum(1 for _ in games_dir.iterdir())
+            shutil.rmtree(games_dir)
+        print(f"Overwrite mode: cleared existing state "
+              f"({removed} item(s)) from {output_dir}")
 
     # Validate inputs
     if not merged_path.exists():

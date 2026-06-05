@@ -17,8 +17,8 @@ The two large input files are not included in the repository. Download them into
 ```powershell
 # Windows (PowerShell)
 New-Item -ItemType Directory -Force pipeline/input
-Invoke-WebRequest -Uri https://www.ferzkopp.net/Data/chess_games.jsonl.gz -OutFile pipeline/input/chess_games.jsonl.gz
-Invoke-WebRequest -Uri https://www.ferzkopp.net/Data/augmented_chess_games.jsonl.gz -OutFile pipeline/input/augmented_chess_games.jsonl.gz
+curl.exe -L --raw -o pipeline/input/chess_games.jsonl.gz https://www.ferzkopp.net/Data/chess_games.jsonl.gz
+curl.exe -L --raw -o pipeline/input/augmented_chess_games.jsonl.gz https://www.ferzkopp.net/Data/augmented_chess_games.jsonl.gz
 ```
 
 ```bash
